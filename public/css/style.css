@@ -1,0 +1,61 @@
+html,body {
+    font: 1.1em "Century Gothic", Futura, sans-serif;
+    margin: 0px;
+    height:100%;
+    background: #666;
+    cursor:cell;
+}
+
+ol, ul {
+    padding-left: 30px;
+}
+.board-row:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.status {
+    margin-bottom: 0px;
+}
+.square {
+    box-sizing:border-box;
+    background: #ccc;
+    border: 1px solid #bbb;
+    float: left;
+    font-size: 0.3em;
+    font-weight: bold;
+    line-height: 50px;
+    user-select: none;
+    height: 10px;
+    width:  10px;
+    text-align: center;
+}
+.highlightFood{
+    border-color:red;
+    background-color:red;
+}
+.highlightBody{
+    border-color:greenyellow;
+    background-color:greenyellow;
+}
+.highlightHead{
+    border-color:green;
+    background-color:green;
+}
+
+
+.LostGameBody{
+    border-color:black;
+    background-color:black;
+}
+#app{
+    height:100%;
+}
+.game {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+}
