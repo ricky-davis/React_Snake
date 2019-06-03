@@ -50,7 +50,7 @@ class Board extends React.Component {
         super(props);
         this.left = 0;
         this.top = 0;
-        this.arLength=30;
+        this.arLength=40;
 
         this.snakeLength=10;
         this.snakeDir="d";
@@ -65,8 +65,8 @@ class Board extends React.Component {
             snake: Array(this.snakeLength).fill(Array(2).fill(null)),
         };
         this.initializeSnake();
-
-        this.timer = setInterval(this.gameLogic.bind(this), 100);
+        this.gameLogic = this.gameLogic.bind(this);
+        this.timer = setTimeout(this.gameLogic, 100);
         console.log(this.state);
         this.onKeyPressed = this.onKeyPressed.bind(this);
         this.generateRandomFood = this.generateRandomFood.bind(this);
@@ -93,6 +93,7 @@ class Board extends React.Component {
     }
     loseEvent(){
         this.state.gameState=2;
+        clearTimeout(this.timer);
         clearInterval(this.timer);
         console.log("YOU LOSE");
         let YOU=[[0,0],[1,0],[2,1],[3,2],[2,3],[1,4],[0,4],
@@ -132,8 +133,8 @@ class Board extends React.Component {
             [6,18],[6,19],[6,20],[6,21],[6,22],
 
         ];
-        let xOffset=3;
-        let yOffset=7;
+        let xOffset=(this.state.arLength/2)-12;
+        let yOffset=(this.state.arLength/2)-8;
         YOU = shiftBlocks(YOU,[yOffset+0,xOffset+3]);
         LOSE = shiftBlocks(LOSE,[yOffset+8,xOffset+0]);
         let snake=[];
@@ -144,44 +145,47 @@ class Board extends React.Component {
         this.setState({foodSpot:[-1,-1]})
     }
     gameLogic(){
-        this.setState({snakeDir:this.state.tempDir});
-        let snake = this.state.snake.slice();
+        if(this.state.gameState===1) {
+            this.setState({snakeDir: this.state.tempDir});
+            let snake = this.state.snake.slice();
 
-        let newPos=snake[snake.length-1].slice();
-        switch(this.state.snakeDir){
-            case "w":
-                newPos[0]-=1;
-                break;
-            case "s":
-                newPos[0]+=1;
-                break;
-            case "a":
-                newPos[1]-=1;
-                break;
-            case "d":
-                newPos[1]+=1;
-                break;
-        }
-        if(newPos[0]>this.state.arLength-1)newPos[0]=0;
-        if(newPos[0]<0)newPos[0]=this.state.arLength-1;
-        if(newPos[1]>this.state.arLength-1)newPos[1]=0;
-        if(newPos[1]<0)newPos[1]=this.state.arLength-1;
-        let removed=snake.shift();
-        snake.push(newPos);
+            let newPos = snake[snake.length - 1].slice();
+            switch (this.state.snakeDir) {
+                case "w":
+                    newPos[0] -= 1;
+                    break;
+                case "s":
+                    newPos[0] += 1;
+                    break;
+                case "a":
+                    newPos[1] -= 1;
+                    break;
+                case "d":
+                    newPos[1] += 1;
+                    break;
+            }
+            if (newPos[0] > this.state.arLength - 1) newPos[0] = 0;
+            if (newPos[0] < 0) newPos[0] = this.state.arLength - 1;
+            if (newPos[1] > this.state.arLength - 1) newPos[1] = 0;
+            if (newPos[1] < 0) newPos[1] = this.state.arLength - 1;
+            let removed = snake.shift();
+            snake.push(newPos);
 
-        let bodyArray = snake.slice();
-        bodyArray.pop();
-        //console.log(snake[snake.length-1]);
-        if(isArrayInArray(bodyArray,snake[snake.length-1])){
-            this.loseEvent();
-            return;
-        }
+            let bodyArray = snake.slice();
+            bodyArray.pop();
+            //console.log(snake[snake.length-1]);
+            if (isArrayInArray(bodyArray, snake[snake.length - 1])) {
+                this.loseEvent();
+                return;
+            }
 
-        if(JSON.stringify(this.state.snake[this.state.snake.length-1]) === JSON.stringify(this.state.foodSpot)){
-            snake.unshift(removed);
-            this.generateRandomFood();
+            if (JSON.stringify(this.state.snake[this.state.snake.length - 1]) === JSON.stringify(this.state.foodSpot)) {
+                snake.unshift(removed);
+                this.generateRandomFood();
+            }
+            this.setState({snake: snake});
+            this.timer = setTimeout(this.gameLogic, 0);
         }
-        this.setState({snake:snake});
     }
     renderSquare(i,j) {
         let highlight;
@@ -251,10 +255,9 @@ class Board extends React.Component {
     }
 
     render() {
+        document.addEventListener("keydown", this.onKeyPressed, false);
         return (
             <div key={"gameBoardHolder"} ref={this.refCallback} className="GameHolder"
-                 onKeyDown={(e) => this.onKeyPressed(e)}
-                 tabIndex={0}
             >
                 {this.createTable()}
             </div>

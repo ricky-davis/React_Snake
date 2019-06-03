@@ -2,7 +2,7 @@ html,body {
     font: 1.1em "Century Gothic", Futura, sans-serif;
     margin: 0px;
     height:100%;
-    background: #666;
+    background: #222;
     cursor:cell;
 }
 
@@ -20,8 +20,8 @@ ol, ul {
 }
 .square {
     box-sizing:border-box;
-    background: #ccc;
-    border: 1px solid #bbb;
+    background: #333;
+    border: 1px solid #333;
     float: left;
     font-size: 0.3em;
     font-weight: bold;
@@ -36,18 +36,18 @@ ol, ul {
     background-color:red;
 }
 .highlightBody{
-    border-color:greenyellow;
-    background-color:greenyellow;
+    border-color:#ccc;
+    background-color:#ccc;
 }
 .highlightHead{
-    border-color:green;
-    background-color:green;
+    border-color:#fff;
+    background-color:#fff;
 }
 
 
 .LostGameBody{
-    border-color:black;
-    background-color:black;
+    border-color:red;
+    background-color:red;
 }
 #app{
     height:100%;
