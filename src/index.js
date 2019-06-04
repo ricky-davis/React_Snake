@@ -35,9 +35,18 @@ class Square extends React.Component {
         return classBuffer;
     }
 
+
     render() {
+        const divStyle = {
+            position:"absolute",
+            top:(this.props.i*10)+this.props.ptop,
+            left:(this.props.j*10)+this.props.pleft,
+            height:this.props.size,
+            width:this.props.size,
+        };
+
         return(
-            <span
+            <span style={divStyle}
                 className={this.getClass()}
             >
             </span>
@@ -48,14 +57,13 @@ class Square extends React.Component {
 class Board extends React.Component {
     constructor(props) {
         super(props);
-        this.left = 0;
-        this.top = 0;
         this.arLength=40;
-
         this.snakeLength=10;
+        this.snakeSize=10;
         this.snakeDir="d";
-
+        this.gameSpeed=100;
         this.state = {
+            gameSpeed:this.gameSpeed,
             gameState:1,
             arLength:this.arLength,
             foodSpot:Array(2),
@@ -66,7 +74,7 @@ class Board extends React.Component {
         };
         this.initializeSnake();
         this.gameLogic = this.gameLogic.bind(this);
-        this.timer = setTimeout(this.gameLogic, 100);
+        this.timer = setTimeout(this.gameLogic, this.state.gameSpeed);
         console.log(this.state);
         this.onKeyPressed = this.onKeyPressed.bind(this);
         this.generateRandomFood = this.generateRandomFood.bind(this);
@@ -184,7 +192,10 @@ class Board extends React.Component {
                 this.generateRandomFood();
             }
             this.setState({snake: snake});
-            this.timer = setTimeout(this.gameLogic, 0);
+
+            this.setState({gameSpeed: this.gameSpeed-(snake.length)});
+            console.log(this.state.gameSpeed);
+            this.timer = setTimeout(this.gameLogic, this.state.gameSpeed);
         }
     }
     renderSquare(i,j) {
@@ -204,11 +215,18 @@ class Board extends React.Component {
                 highlight = "LostGameBody";
             }
         }
-        return (
-            <Square key={i+","+j}
-                    highlight={highlight}
-            />
-        );
+        if(highlight) {
+            return (
+                <Square key={i + "," + j}
+                        highlight={highlight}
+                        i={i}
+                        j={j}
+                        pleft={this.state.left}
+                        ptop={this.state.top}
+                        size={this.snakeSize}
+                />
+            );
+        }
     }
 
     createTable() {
@@ -218,10 +236,8 @@ class Board extends React.Component {
             let children = [];
             //Inner loop to create children
             for (let j = 0; j < this.state.squares[i].length; j++) {
-                children.push(this.renderSquare(i,j));
+                table.push(this.renderSquare(i,j));
             }
-            //Create the parent and add the children
-            table.push(<div key={"squareBR"+i} className="board-row">{children}</div>);
         }
         return table
     }
@@ -256,8 +272,12 @@ class Board extends React.Component {
 
     render() {
         document.addEventListener("keydown", this.onKeyPressed, false);
+        const divStyle = {
+            width:this.state.arLength*this.snakeSize+"px",
+            height:this.state.arLength*this.snakeSize+"px",
+        }
         return (
-            <div key={"gameBoardHolder"} ref={this.refCallback} className="GameHolder"
+            <div key={"gameBoardHolder"} ref={this.refCallback} style={divStyle} className="GameHolder"
             >
                 {this.createTable()}
             </div>

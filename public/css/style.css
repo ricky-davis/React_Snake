@@ -23,12 +23,7 @@ ol, ul {
     background: #333;
     border: 1px solid #333;
     float: left;
-    font-size: 0.3em;
-    font-weight: bold;
-    line-height: 50px;
     user-select: none;
-    height: 10px;
-    width:  10px;
     text-align: center;
 }
 .highlightFood{
@@ -51,6 +46,9 @@ ol, ul {
 }
 #app{
     height:100%;
+}
+.GameHolder{
+    background-color:#333;
 }
 .game {
     display: flex;
